@@ -7,6 +7,8 @@ This repository contains two entry points for a monitoring prototype:
   notifications, schedules a Teams meeting, and prepares a PDF summary.
 * `web_app.py` – a minimal Flask web application that exposes a `/logs`
   endpoint for listing stored events from Elasticsearch.
+* `ops_console.py` – a FastAPI operations console providing placeholder
+  endpoints for incidents, runbooks and a RAG powered chatbot.
 
 All external integrations (Elasticsearch, Twilio, SMTP, Microsoft Graph, PDF
 creation) are represented as placeholders. Provide valid credentials through
@@ -20,7 +22,10 @@ python monitoring_agent.py
 
 # Start the web interface
 python web_app.py
+
+# Run the AI operations console
+uvicorn ops_console:app --reload
 ```
 
-Both scripts expect an Elasticsearch instance at `ELASTIC_HOST` (defaults to
+All scripts expect an Elasticsearch instance at `ELASTIC_HOST` (defaults to
 `http://localhost:9200`).
