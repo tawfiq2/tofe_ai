@@ -1,0 +1,39 @@
+name: Download OutSystems Source
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment_name:
+        description: 'OutSystems environment name'
+        required: true
+      application_name:
+        description: 'Application name'
+        required: true
+      output_name:
+        description: 'Output filename'
+        default: 'source.zip'
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: pip install requests
+      - name: Download source package
+        env:
+          LIFETIME_BASE: ${{ secrets.LIFETIME_BASE }}
+          LIFETIME_TOKEN: ${{ secrets.LIFETIME_TOKEN }}
+        run: |
+          python outsystems_source_download.py --env "${{ github.event.inputs.environment_name }}" \
+            --app "${{ github.event.inputs.application_name }}" \
+            --output "${{ github.event.inputs.output_name }}"
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: outsystems-source
+          path: ${{ github.event.inputs.output_name }}
